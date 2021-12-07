@@ -46,9 +46,6 @@ namespace API
             });
             services.AddMvc(options => options.EnableEndpointRouting = false);
             
-            //services.AddDbContext<AppDbContext>(options => {
-            //    options.UseInMemoryDatabase("supermarket-api-in-memory");
-            //});
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
 
