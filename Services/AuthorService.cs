@@ -35,7 +35,6 @@ namespace API.Services
             }
             catch (Exception ex)
             {
-                // Do some logging stuff
                 return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
             }
         }

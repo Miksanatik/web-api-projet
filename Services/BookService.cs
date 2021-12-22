@@ -42,7 +42,7 @@ namespace API.Services
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(book.AuthorId);
 			if (existingBook == null)
-				return new BookResponse("Invalid book.");
+				return new BookResponse(TextResponses.NotFoundResponse);
 			try
 			{
 				await _bookRepository.AddAsync(book);
