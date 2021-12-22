@@ -8,8 +8,8 @@ namespace API.Mapping
     {
         public ResourceToModelProfile()
         {
-            CreateMap<SaveAuthorResource, Author>();
-            CreateMap<SaveBookResource, Book>();
+            CreateMap<SaveAuthorViewModel, Author>();
+            CreateMap<SaveBookViewModel, Book>();
         }
     }
 }

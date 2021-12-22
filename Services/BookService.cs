@@ -24,6 +24,20 @@ namespace API.Services
             return await _bookRepository.ListAsync();
         }
 
+		public async Task<IEnumerable<Book>> GetAllByAuthorAsync(int id)
+		{
+			var existingBook = await _bookRepository.FindByIdAsync(id);
+			if (existingBook == null)
+				return null;                //what I need return here?
+			
+			return await _bookRepository.FindByAuthorIdAsync(existingBook.AuthorId); 
+		}
+
+		public async Task<IEnumerable<Book>> GetAllByNameAsync(string name)
+		{
+			return await _bookRepository.FindByNameAsync(name); //null can be returned, it's OK?		             
+		}
+
 		public async Task<BookResponse> SaveAsync(Book book)
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(book.AuthorId);
@@ -39,16 +53,17 @@ namespace API.Services
 			catch (Exception ex)
 			{
 				// Do some logging stuff
-				return new BookResponse($"An error occurred when saving the book: {ex.Message}");
+				return new BookResponse($"{TextResponses.BadResponse} {ex.Message}");
 			}
 		}
+
 
 		public async Task<BookResponse> UpdateAsync(int id, Book book)
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(id);
 
 			if (existingBook == null)
-				return new BookResponse("Book not found.");
+				return new BookResponse(TextResponses.NotFoundResponse);
 
 			existingBook.Name = book.Name;
 			existingBook.Price = book.Price;
@@ -64,7 +79,7 @@ namespace API.Services
 			}
 			catch (Exception ex)
 			{
-				return new BookResponse($"An error occurred when updating the book: {ex.Message}");
+				return new BookResponse($"{TextResponses.BadResponse} {ex.Message}");
 			}
 		}
 		public async Task<BookResponse> DeleteAsync(int id)
@@ -72,7 +87,7 @@ namespace API.Services
 			var existingBook = await _bookRepository.FindByIdAsync(id);
 
 			if (existingBook == null)
-				return new BookResponse("Book not found.");
+				return new BookResponse(TextResponses.NotFoundResponse);
 
 			try
 			{
@@ -83,7 +98,7 @@ namespace API.Services
 			}
 			catch (Exception ex)
 			{
-				return new BookResponse($"An error occurred when deleting the book: {ex.Message}");
+				return new BookResponse($"{TextResponses.BadResponse} {ex.Message}");
 			}
 		}
 	}

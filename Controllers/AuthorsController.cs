@@ -24,43 +24,43 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<AuthorResource>> GetAllAsync()
+        public async Task<IEnumerable<AuthorViewModel>> GetAllAsync()
         {
             var authors = await _authorService.ListAsync();
-            var resources = _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorResource>>(authors);
+            var resources = _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorViewModel>>(authors);
             return resources;
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveAuthorResource resource)
+        public async Task<IActionResult> PostNewAuthorAsync([FromBody] SaveAuthorViewModel resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var author = _mapper.Map<SaveAuthorResource, Author>(resource);
+            var author = _mapper.Map<SaveAuthorViewModel, Author>(resource);
 
             var result = await _authorService.SaveAsync(author);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var authorResource = _mapper.Map<Author, AuthorResource>(result.Author);
+            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Author);
             return Ok(authorResource);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveAuthorResource resource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveAuthorViewModel resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var author = _mapper.Map<SaveAuthorResource, Author>(resource);
+            var author = _mapper.Map<SaveAuthorViewModel, Author>(resource);
             var result = await _authorService.UpdateAsync(id, author);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var authorResource = _mapper.Map<Author, AuthorResource>(result.Author);
+            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Author);
             return Ok(authorResource);
         }
         [HttpDelete("{id}")]
@@ -71,7 +71,7 @@ namespace API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var authorResource = _mapper.Map<Author, AuthorResource>(result.Author);
+            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Author);
             return Ok(authorResource);
         }
     }

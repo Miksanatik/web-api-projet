@@ -32,6 +32,19 @@ namespace API.Persistence.Repositories
             return await _context.Books.FindAsync(id);
         }
 
+        public async Task<IEnumerable<Book>> FindByAuthorIdAsync(int id)
+        {
+            return  await _context.Books.Where(p => p.AuthorId == id)
+                .Include(p => p.Author)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Book>> FindByNameAsync(string name)
+        {
+            return await _context.Books.Where(p => p.Name == name)
+                .Include(p => p.Author)
+                .ToListAsync();
+        }
+
         public void Update(Book book)
         {
             _context.Books.Update(book);

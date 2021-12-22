@@ -22,43 +22,61 @@ namespace Supermarket.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<BookResource>> ListAsync()
+        public async Task<IEnumerable<BookViewModel>> ListAllAsync()
         {
             var books = await _bookService.ListAsync();
-            var resources = _mapper.Map<IEnumerable<Book>, IEnumerable<BookResource>>(books);
+            var resources = _mapper.Map<IEnumerable<Book>, IEnumerable<BookViewModel>>(books);
             return resources;
         }
 
+        [HttpGet("byName={name}")]
+        public async Task<IEnumerable<BookViewModel>> GetAllByNameAsync(string name)
+        {
+            var books = await _bookService.GetAllByNameAsync(name);
+            var resources = _mapper.Map<IEnumerable<Book>, IEnumerable<BookViewModel>>(books);
+            return resources;
+        }
+
+        [HttpGet("byId={id}")]
+        public async Task<IEnumerable<BookViewModel>> GetAllByAuthorAsync(int id)
+        {
+            var books = await _bookService.GetAllByAuthorAsync(id);
+            var resources = _mapper.Map<IEnumerable<Book>, IEnumerable<BookViewModel>>(books);
+            return resources;
+        }
+
+        
+
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveBookResource resource)
+        public async Task<IActionResult> PostNewBookAsync([FromBody] SaveBookViewModel resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var book = _mapper.Map<SaveBookResource, Book>(resource);
+            var book = _mapper.Map<SaveBookViewModel, Book>(resource);
 
             var result = await _bookService.SaveAsync(book);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var bookResource = _mapper.Map<Book, BookResource>(result.Book);
+            var bookResource = _mapper.Map<Book, BookViewModel>(result.Book);
             return Ok(bookResource);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveBookResource resource)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveBookViewModel resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
 
-            var category = _mapper.Map<SaveBookResource, Book>(resource);
+            var category = _mapper.Map<SaveBookViewModel, Book>(resource);
             var result = await _bookService.UpdateAsync(id, category);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Book, BookResource>(result.Book);
+            var categoryResource = _mapper.Map<Book, BookViewModel>(result.Book);
             return Ok(categoryResource);
         }
 
@@ -70,7 +88,7 @@ namespace Supermarket.API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Book, BookResource>(result.Book);
+            var categoryResource = _mapper.Map<Book, BookViewModel>(result.Book);
             return Ok(categoryResource);
         }
     }

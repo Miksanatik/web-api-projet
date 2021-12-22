@@ -36,7 +36,7 @@ namespace API.Services
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new AuthorResponse($"An error occurred when saving the author: {ex.Message}");
+                return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
             }
         }
         public async Task<AuthorResponse> UpdateAsync(int id, Author author)
@@ -44,7 +44,7 @@ namespace API.Services
             var existingCategory = await _authorRepository.FindByIdAsync(id);
 
             if (existingCategory == null)
-                return new AuthorResponse("Category not found.");
+                return new AuthorResponse(TextResponses.NotFoundResponse);
 
             existingCategory.Name = author.Name;
 
@@ -58,7 +58,7 @@ namespace API.Services
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new AuthorResponse($"An error occurred when updating the author: {ex.Message}");
+                return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
             }
         }
         public async Task<AuthorResponse> DeleteAsync(int id)
@@ -66,7 +66,7 @@ namespace API.Services
             var existingAuthor = await _authorRepository.FindByIdAsync(id);
 
             if (existingAuthor == null)
-                return new AuthorResponse("Category not found.");
+                return new AuthorResponse(TextResponses.NotFoundResponse);
 
             try
             {
@@ -78,7 +78,7 @@ namespace API.Services
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new AuthorResponse($"An error occurred when deleting the author: {ex.Message}");
+                return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
             }
         }
     }
