@@ -19,51 +19,52 @@ namespace API.Services
 			_unitOfWork = unitOfWork;
 		}
 
-        public async Task<IEnumerable<Book>> ListAsync()
+        public ValueTask<IEnumerable<Book>> ListAsync()
         {
-            return await _bookRepository.ListAsync();
+            return _bookRepository.ListAsync();
         }
 
+		
 		public async Task<IEnumerable<Book>> GetAllByAuthorAsync(int id)
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(id);
 			if (existingBook == null)
-				return null;                //what I need return here?
-			
+				return null;    //возврат нуля невозможен для ValueTask            
+
 			return await _bookRepository.FindByAuthorIdAsync(existingBook.AuthorId); 
 		}
 
+		//невозможно преобразовать List в ValueTask, ошибка внутри FindByNameAsync (файл BookRepository)
 		public async Task<IEnumerable<Book>> GetAllByNameAsync(string name)
 		{
-			return await _bookRepository.FindByNameAsync(name); //null can be returned, it's OK?		             
+			return await _bookRepository.FindByNameAsync(name);	             
 		}
 
-		public async Task<BookResponse> SaveAsync(Book book)
+		public async Task<ConcreteResponse<Book>> SaveAsync(Book book)
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(book.AuthorId);
 			if (existingBook == null)
-				return new BookResponse(TextResponses.NotFoundResponse);
+				return new ConcreteResponse<Book>(TextResponses.NotFoundResponse); //здесь и далее при переходе на ValueTask возникает CS0029
 			try
 			{
 				await _bookRepository.AddAsync(book);
 				await _unitOfWork.CompleteAsync();
 
-				return new BookResponse(book);
+				return new ConcreteResponse<Book>(book);
 			}
 			catch (Exception ex)
 			{
-				// Do some logging stuff
-				return new BookResponse($"{TextResponses.BadResponse} {ex.Message}");
+				return new ConcreteResponse<Book>($"{TextResponses.BadResponse} {ex.Message}");
 			}
 		}
 
 
-		public async Task<BookResponse> UpdateAsync(int id, Book book)
+		public async Task<ConcreteResponse<Book>> UpdateAsync(int id, Book book)
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(id);
 
 			if (existingBook == null)
-				return new BookResponse(TextResponses.NotFoundResponse);
+				return new ConcreteResponse<Book>(TextResponses.NotFoundResponse);
 
 			existingBook.Name = book.Name;
 			existingBook.Price = book.Price;
@@ -75,30 +76,30 @@ namespace API.Services
 				_bookRepository.Update(existingBook);
 				await _unitOfWork.CompleteAsync();
 
-				return new BookResponse(existingBook);
+				return new ConcreteResponse<Book>(existingBook);
 			}
 			catch (Exception ex)
 			{
-				return new BookResponse($"{TextResponses.BadResponse} {ex.Message}");
+				return new ConcreteResponse<Book>($"{TextResponses.BadResponse} {ex.Message}");
 			}
 		}
-		public async Task<BookResponse> DeleteAsync(int id)
+		public async Task<ConcreteResponse<Book>> DeleteAsync(int id)
 		{
 			var existingBook = await _bookRepository.FindByIdAsync(id);
 
 			if (existingBook == null)
-				return new BookResponse(TextResponses.NotFoundResponse);
+				return new ConcreteResponse<Book>(TextResponses.NotFoundResponse);
 
 			try
 			{
 				_bookRepository.Remove(existingBook);
 				await _unitOfWork.CompleteAsync();
 
-				return new BookResponse(existingBook);
+				return new ConcreteResponse<Book>(existingBook);
 			}
 			catch (Exception ex)
 			{
-				return new BookResponse($"{TextResponses.BadResponse} {ex.Message}");
+				return new ConcreteResponse<Book>($"{TextResponses.BadResponse} {ex.Message}");
 			}
 		}
 	}

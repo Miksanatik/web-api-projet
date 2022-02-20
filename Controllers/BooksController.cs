@@ -48,7 +48,7 @@ namespace Supermarket.API.Controllers
         
 
         [HttpPost]
-        public async Task<IActionResult> PostNewBookAsync([FromBody] SaveBookViewModel resource)
+        public async Task<IActionResult> CreateAsync([FromBody] SaveBookViewModel resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessages());
@@ -60,7 +60,7 @@ namespace Supermarket.API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var bookResource = _mapper.Map<Book, BookViewModel>(result.Book);
+            var bookResource = _mapper.Map<Book, BookViewModel>(result.Entity);
             return Ok(bookResource);
         }
 
@@ -76,7 +76,7 @@ namespace Supermarket.API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Book, BookViewModel>(result.Book);
+            var categoryResource = _mapper.Map<Book, BookViewModel>(result.Entity);
             return Ok(categoryResource);
         }
 
@@ -88,7 +88,7 @@ namespace Supermarket.API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Book, BookViewModel>(result.Book);
+            var categoryResource = _mapper.Map<Book, BookViewModel>(result.Entity);
             return Ok(categoryResource);
         }
     }

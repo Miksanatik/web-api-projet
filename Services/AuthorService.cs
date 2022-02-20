@@ -20,30 +20,30 @@ namespace API.Services
             _authorRepository = authorRepository;
             _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<Author>> ListAsync()
+        public  ValueTask<IEnumerable<Author>> ListAsync()
         {
-            return await _authorRepository.ListAsync();
+            return   _authorRepository.ListAsync();
         }
-        public async Task<AuthorResponse> SaveAsync(Author author)
+        public  async Task<ConcreteResponse<Author>> SaveAsync(Author author)
         {
             try
             {
                 await _authorRepository.AddAsync(author);
                 await _unitOfWork.CompleteAsync();
 
-                return new AuthorResponse(author);
+                return new ConcreteResponse<Author>(author); //здесь и далее при переходе на ValueTask возникает CS0029
             }
             catch (Exception ex)
             {
-                return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
+                return new ConcreteResponse<Author>($"{TextResponses.BadResponse} {ex.Message}");
             }
         }
-        public async Task<AuthorResponse> UpdateAsync(int id, Author author)
+        public async Task<ConcreteResponse<Author>> UpdateAsync(int id, Author author)
         {
             var existingCategory = await _authorRepository.FindByIdAsync(id);
 
             if (existingCategory == null)
-                return new AuthorResponse(TextResponses.NotFoundResponse);
+                return new ConcreteResponse<Author>(TextResponses.NotFoundResponse);
 
             existingCategory.Name = author.Name;
 
@@ -52,32 +52,32 @@ namespace API.Services
                 _authorRepository.Update(existingCategory);
                 await _unitOfWork.CompleteAsync();
 
-                return new AuthorResponse(existingCategory);
+                return new ConcreteResponse<Author>(existingCategory);
             }
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
+                return new ConcreteResponse<Author>($"{TextResponses.BadResponse} {ex.Message}");
             }
         }
-        public async Task<AuthorResponse> DeleteAsync(int id)
+        public async Task<ConcreteResponse<Author>> DeleteAsync(int id)
         {
             var existingAuthor = await _authorRepository.FindByIdAsync(id);
 
             if (existingAuthor == null)
-                return new AuthorResponse(TextResponses.NotFoundResponse);
+                return new ConcreteResponse<Author>(TextResponses.NotFoundResponse);
 
             try
             {
                 _authorRepository.Remove(existingAuthor);
                 await _unitOfWork.CompleteAsync();
 
-                return new AuthorResponse(existingAuthor);
+                return new ConcreteResponse<Author>(existingAuthor);
             }
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new AuthorResponse($"{TextResponses.BadResponse} {ex.Message}");
+                return new ConcreteResponse<Author>($"{TextResponses.BadResponse} {ex.Message}");
             }
         }
     }

@@ -9,11 +9,11 @@ namespace API.Domain.Services
 {
     public interface IBookService
     {
-        Task<IEnumerable<Book>> ListAsync();
+        ValueTask<IEnumerable<Book>> ListAsync();
         Task<IEnumerable<Book>> GetAllByAuthorAsync(int id);
         Task<IEnumerable<Book>> GetAllByNameAsync(string name);
-        Task<BookResponse> SaveAsync(Book book);
-        Task<BookResponse> UpdateAsync(int id, Book book);
-        Task<BookResponse> DeleteAsync(int id);
+        Task<ConcreteResponse<Book>> SaveAsync(Book book);
+        Task<ConcreteResponse<Book>> UpdateAsync(int id, Book book);
+        Task<ConcreteResponse<Book>> DeleteAsync(int id);
     }
 }

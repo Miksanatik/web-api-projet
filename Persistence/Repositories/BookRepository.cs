@@ -10,27 +10,18 @@ using API.Persistence.Contexts;
 
 namespace API.Persistence.Repositories
 {
-    public class BookRepository : BaseRepository, IBookRepository
+    public class BookRepository : BaseRepository<Book>, IBookRepository
     {
         public BookRepository(AppDbContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Book>> ListAsync()
+        new public async Task<IEnumerable<Book>> ListAsync()
         {
             return await _context.Books.Include(p => p.Author)
                                           .ToListAsync();
         }
 
-        public async Task AddAsync(Book book)
-        {
-            await _context.Books.AddAsync(book);
-        }
-
-        public async Task<Book> FindByIdAsync(int id)
-        {
-            return await _context.Books.FindAsync(id);
-        }
 
         public async Task<IEnumerable<Book>> FindByAuthorIdAsync(int id)
         {
@@ -45,14 +36,5 @@ namespace API.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public void Update(Book book)
-        {
-            _context.Books.Update(book);
-        }
-
-        public void Remove(Book book)
-        {
-            _context.Books.Remove(book);
-        }
     }
 }

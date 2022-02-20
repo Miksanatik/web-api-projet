@@ -7,9 +7,9 @@ namespace API.Domain.Services
 {
     public interface IAuthorService
     {
-        Task<IEnumerable<Author>> ListAsync();
-        Task<AuthorResponse> SaveAsync(Author author);
-        Task<AuthorResponse> UpdateAsync(int id, Author author);
-        Task<AuthorResponse> DeleteAsync(int id);
+        ValueTask<IEnumerable<Author>> ListAsync();
+        Task<ConcreteResponse<Author>> SaveAsync(Author author);
+        Task<ConcreteResponse<Author>> UpdateAsync(int id, Author author);
+        Task<ConcreteResponse<Author>> DeleteAsync(int id);
     }
 }

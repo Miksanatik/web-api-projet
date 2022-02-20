@@ -8,9 +8,9 @@ namespace API.Domain.Repositories
 {
     public interface IBookRepository
     {
-        Task<IEnumerable<Book>> ListAsync();
+        ValueTask<IEnumerable<Book>> ListAsync();
         Task AddAsync(Book book);
-        Task<Book> FindByIdAsync(int id);
+        ValueTask<Book> FindByIdAsync(int id);
         Task<IEnumerable<Book>> FindByAuthorIdAsync(int id);
         Task<IEnumerable<Book>> FindByNameAsync(string name);
         void Update(Book book);

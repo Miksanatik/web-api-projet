@@ -44,7 +44,7 @@ namespace API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Author);
+            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Entity);
             return Ok(authorResource);
         }
 
@@ -60,7 +60,7 @@ namespace API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Author);
+            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Entity);
             return Ok(authorResource);
         }
         [HttpDelete("{id}")]
@@ -71,7 +71,7 @@ namespace API.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Author);
+            var authorResource = _mapper.Map<Author, AuthorViewModel>(result.Entity);
             return Ok(authorResource);
         }
     }
